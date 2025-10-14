@@ -14,7 +14,7 @@ app.use(express.json());
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://kellaspace-frontend.vercel.app/",
+  "https://kellaspace-frontend.vercel.app",
 ];
 
 app.use(

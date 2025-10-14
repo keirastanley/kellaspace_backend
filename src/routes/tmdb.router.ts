@@ -7,7 +7,7 @@ import {
 
 const tmdbRouter = Router();
 
-tmdbRouter.get("/search/movies", searchForMovie);
+tmdbRouter.get("/search/movie", searchForMovie);
 
 tmdbRouter.get("/search/tv", searchForTV);
 
