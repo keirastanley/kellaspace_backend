@@ -29,7 +29,6 @@ export const searchForTV = async (req: Request, res: Response) => {
 export const getGenres = async (req: Request, res: Response) => {
   try {
     const items = await tmdbService.getGenreArr();
-    console.log(items);
     res.status(200).json(getSuccessResponse(items));
   } catch (error) {
     res
