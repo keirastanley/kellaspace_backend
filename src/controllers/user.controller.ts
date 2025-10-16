@@ -54,7 +54,7 @@ export const getItemById = async (
       res.status(400).json(getErrResponse(null, `Invalid ${collection} ID`));
     } else {
       const item = await db
-        .collection("recommendations")
+        .collection("user")
         .findOne({ _id: new ObjectId(itemId) });
 
       if (!item) {

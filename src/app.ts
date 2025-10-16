@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { MongoClient } from "mongodb";
-import { getRecommendationsRouter } from "./routes/recommendations.router";
+import { getUserRouter } from "./routes/user.router";
 import { tmdbRouter } from "./routes/tmdb.router";
 
 dotenv.config();
@@ -32,7 +32,7 @@ app.use(
 MongoClient.connect(process.env.MONGO_URI!)
   .then((client) => {
     const db = client.db();
-    app.use("/api/recommendations", getRecommendationsRouter(db));
+    app.use("/api/kellaspace", getUserRouter(db));
     app.use("/api/tmdb", tmdbRouter);
 
     app.listen(port, () => {

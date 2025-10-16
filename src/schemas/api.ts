@@ -1,4 +1,4 @@
-export type Collection = "recommendations";
+export type Collection = "user";
 
 export type DbSuccess<PayloadItem> = {
   success: true;

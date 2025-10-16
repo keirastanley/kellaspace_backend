@@ -6,29 +6,29 @@ import {
   editItemById,
   getAllItems,
   getItemById,
-} from "../controllers/recommendations.controller";
+} from "../controllers/user.controller";
 
-export const getRecommendationsRouter = (db: Db) => {
+export const getUserRouter = (db: Db) => {
   const router = Router();
 
   router.get("/", async (req: Request, res: Response) => {
-    await getAllItems(db, "recommendations", res);
+    await getAllItems(db, "user", res);
   });
 
   router.post("/", async (req: Request, res: Response) => {
-    await addNewItem(db, "recommendations", req, res);
+    await addNewItem(db, "user", req, res);
   });
 
   router.get("/:id", async (req: Request, res: Response) => {
-    await getItemById(db, "recommendations", req, res);
+    await getItemById(db, "user", req, res);
   });
 
   router.patch("/:id", async (req: Request, res: Response) => {
-    await editItemById(db, "recommendations", req, res);
+    await editItemById(db, "user", req, res);
   });
 
   router.delete("/:id", async (req: Request, res: Response) => {
-    await deleteItemById(db, "recommendations", req, res);
+    await deleteItemById(db, "user", req, res);
   });
 
   return router;

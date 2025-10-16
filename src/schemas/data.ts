@@ -35,6 +35,35 @@ export const recommendationSchema = z.object({
   tmdb_id: z.number(),
 });
 
+export const listSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  createdBy: z.string(),
+  dateCreated: z.string(),
+  description: z.string().optional(),
+  notes: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  image: z
+    .object({
+      src: z.string(),
+      alt: z.string(),
+    })
+    .optional(),
+  contents: z.array(z.string()).optional(),
+});
+
+export const userSchema = z.object({
+  id: z.array(listSchema),
+  recommendations: z.array(recommendationSchema).optional(),
+  lists: z.array(listSchema).optional(),
+  given_name: z.string().optional(),
+  family_name: z.string(),
+  nickname: z.string().optional(),
+  picture: z.string().optional(),
+  email_verified: z.string().optional(),
+  sub: z.string().optional(),
+});
+
 export type ObjectId = ObjectIdMongoDb;
 export type WithId<T> = WithIdMongoDb<T>;
 export type WithoutId<T> = WithoutIdMongoDb<T>;

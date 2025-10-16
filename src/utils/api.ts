@@ -1,9 +1,4 @@
-import {
-  Collection,
-  DbSuccess,
-  DbError,
-  recommendationSchema,
-} from "../schemas";
+import { Collection, DbSuccess, DbError, userSchema } from "../schemas";
 
 export const getSuccessResponse = <Payload>(
   payload: Payload
@@ -22,9 +17,9 @@ export const getErrResponse = (
 
 export const getSchema = (collection: Collection) => {
   switch (collection) {
-    case "recommendations":
-      return recommendationSchema;
+    case "user":
+      return userSchema;
     default:
-      return recommendationSchema;
+      return userSchema;
   }
 };
