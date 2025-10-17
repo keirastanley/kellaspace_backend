@@ -34,7 +34,7 @@ export const recommendationSchema = z.object({
       alt: z.string(),
     })
     .optional(),
-  tmdb_id: z.number(),
+  search_id: z.union([z.string(), z.null()]),
 });
 
 export const listSchema = z.object({

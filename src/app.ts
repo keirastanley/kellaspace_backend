@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { MongoClient } from "mongodb";
 import { getUserRouter } from "./routes/user.router";
-import { tmdbRouter } from "./routes/tmdb.router";
+import { searchRouter } from "./routes/search.router";
 
 dotenv.config();
 
@@ -33,7 +33,7 @@ MongoClient.connect(process.env.MONGO_URI!)
   .then((client) => {
     const db = client.db();
     app.use("/api/kellaspace", getUserRouter(db));
-    app.use("/api/tmdb", tmdbRouter);
+    app.use("/api/search", searchRouter);
 
     app.listen(port, () => {
       console.log(`Listening on port ${port}`);
