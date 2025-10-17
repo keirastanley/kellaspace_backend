@@ -53,15 +53,16 @@ export const listSchema = z.object({
 });
 
 export const userSchema = z.object({
-  id: z.array(listSchema),
+  // id: z.array(listSchema).optional(),
   recommendations: z.array(recommendationSchema).optional(),
   lists: z.array(listSchema).optional(),
   given_name: z.string().optional(),
-  family_name: z.string(),
+  family_name: z.string().optional(),
   nickname: z.string().optional(),
   picture: z.string().optional(),
   email_verified: z.string().optional(),
   sub: z.string().optional(),
+  name: z.string().optional(),
 });
 
 export type ObjectId = ObjectIdMongoDb;

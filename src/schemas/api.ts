@@ -1,4 +1,6 @@
-export type Collection = "user";
+export enum Collection {
+  Users = "users",
+}
 
 export type DbSuccess<PayloadItem> = {
   success: true;

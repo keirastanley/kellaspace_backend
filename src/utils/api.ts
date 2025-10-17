@@ -17,7 +17,7 @@ export const getErrResponse = (
 
 export const getSchema = (collection: Collection) => {
   switch (collection) {
-    case "user":
+    case Collection.Users:
       return userSchema;
     default:
       return userSchema;

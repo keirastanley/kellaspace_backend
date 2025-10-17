@@ -7,28 +7,29 @@ import {
   getAllItems,
   getItemById,
 } from "../controllers/user.controller";
+import { Collection } from "../schemas";
 
 export const getUserRouter = (db: Db) => {
   const router = Router();
 
-  router.get("/", async (req: Request, res: Response) => {
-    await getAllItems(db, "user", res);
+  router.get("/users", async (req: Request, res: Response) => {
+    await getAllItems(db, Collection.Users, res);
   });
 
-  router.post("/", async (req: Request, res: Response) => {
-    await addNewItem(db, "user", req, res);
+  router.post("/users", async (req: Request, res: Response) => {
+    await addNewItem(db, Collection.Users, req, res);
   });
 
-  router.get("/:id", async (req: Request, res: Response) => {
-    await getItemById(db, "user", req, res);
+  router.get("/users/:id", async (req: Request, res: Response) => {
+    await getItemById(db, Collection.Users, req, res);
   });
 
-  router.patch("/:id", async (req: Request, res: Response) => {
-    await editItemById(db, "user", req, res);
+  router.patch("/users/:id", async (req: Request, res: Response) => {
+    await editItemById(db, Collection.Users, req, res);
   });
 
-  router.delete("/:id", async (req: Request, res: Response) => {
-    await deleteItemById(db, "user", req, res);
+  router.delete("/users/:id", async (req: Request, res: Response) => {
+    await deleteItemById(db, Collection.Users, req, res);
   });
 
   return router;

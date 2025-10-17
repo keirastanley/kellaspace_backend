@@ -51,10 +51,11 @@ export const getItemById = async (
 
   try {
     if (!ObjectId.isValid(itemId)) {
+      console.log(itemId);
       res.status(400).json(getErrResponse(null, `Invalid ${collection} ID`));
     } else {
       const item = await db
-        .collection("user")
+        .collection("users")
         .findOne({ _id: new ObjectId(itemId) });
 
       if (!item) {
