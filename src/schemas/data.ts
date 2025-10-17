@@ -22,16 +22,18 @@ export const recommendationSchema = z.object({
   addedBy: z.string(),
   mediaType: z.nativeEnum(MediaType),
   dateAdded: z.string(),
-  link: z.string(),
-  description: z.string(),
+  link: z.string().optional(),
+  description: z.string().optional(),
   completed: z.boolean(),
   favourite: z.boolean(),
-  message: z.string(),
-  tags: z.array(z.string()),
-  image: z.object({
-    src: z.string(),
-    alt: z.string(),
-  }),
+  message: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  image: z
+    .object({
+      src: z.string(),
+      alt: z.string(),
+    })
+    .optional(),
   tmdb_id: z.number(),
 });
 
@@ -64,7 +66,7 @@ export const userSchema = z.object({
   sub: z.string().optional(),
   name: z.string().optional(),
 });
-
+export type UserData = z.infer<typeof userSchema>;
 export type ObjectId = ObjectIdMongoDb;
 export type WithId<T> = WithIdMongoDb<T>;
 export type WithoutId<T> = WithoutIdMongoDb<T>;

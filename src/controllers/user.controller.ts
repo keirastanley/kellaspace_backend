@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Db, ObjectId } from "mongodb";
 import { getErrResponse, getSchema, getSuccessResponse } from "../utils/api";
-import { Collection } from "../schemas";
+import { Collection, recommendationSchema, UserData } from "../schemas";
 
 export const getAllItems = async (
   db: Db,
@@ -51,7 +51,6 @@ export const getItemById = async (
 
   try {
     if (!ObjectId.isValid(itemId)) {
-      console.log(itemId);
       res.status(400).json(getErrResponse(null, `Invalid ${collection} ID`));
     } else {
       const item = await db
@@ -71,7 +70,7 @@ export const getItemById = async (
   }
 };
 
-export const editItemById = async (
+export const addNewRecommendation = async (
   db: Db,
   collection: Collection,
   req: Request,
@@ -83,15 +82,19 @@ export const editItemById = async (
     if (!ObjectId.isValid(itemID)) {
       res.status(400).json(getErrResponse(null, `Invalid ${collection} ID`));
     } else {
-      const schema = getSchema(collection);
-      const { error, success, data } = schema.partial().safeParse(req.body);
+      const schema = recommendationSchema;
+      const { error, success, data } = schema.safeParse(req.body);
+      console.log(error, success, data);
 
       if (error || !success || !data) {
         res.status(400).json(getErrResponse(error, "Invalid data"));
       } else {
         const result = await db
-          .collection(collection)
-          .updateOne({ _id: new ObjectId(itemID) }, { $set: data });
+          .collection<UserData>(collection)
+          .updateOne(
+            { _id: new ObjectId(itemID) },
+            { $push: { recommendations: data } }
+          );
 
         if (result.matchedCount === 0) {
           res.status(404).json(getErrResponse(null, "Item not found"));
