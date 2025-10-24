@@ -5,6 +5,7 @@ import {
   deleteItemById,
   getAllItems,
   getItemById,
+  getItemBySub,
 } from "../controllers/user.controller";
 import { Collection } from "../schemas";
 
@@ -19,8 +20,12 @@ export const getUserRouter = (db: Db) => {
     await addNewRecommendation(db, Collection.Users, req, res);
   });
 
-  router.get("/users/:id", async (req: Request, res: Response) => {
+  router.get("/users/id/:id", async (req: Request, res: Response) => {
     await getItemById(db, Collection.Users, req, res);
+  });
+
+  router.get("/users/sub/:sub", async (req: Request, res: Response) => {
+    await getItemBySub(db, Collection.Users, req, res);
   });
 
   router.patch(

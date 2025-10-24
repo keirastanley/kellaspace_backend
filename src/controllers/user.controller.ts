@@ -56,12 +56,33 @@ export const getItemById = async (
       const item = await db
         .collection("users")
         .findOne({ _id: new ObjectId(itemId) });
-
       if (!item) {
         res.status(404).json(getErrResponse(null, "Item not found"));
       } else {
         res.status(200).json(getSuccessResponse(item));
       }
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json(getErrResponse(error, `Error retrieving ${collection}`));
+  }
+};
+
+export const getItemBySub = async (
+  db: Db,
+  collection: Collection,
+  req: Request,
+  res: Response
+) => {
+  const itemSub = req.params.sub;
+
+  try {
+    const item = await db.collection("users").findOne({ sub: itemSub });
+    if (!item) {
+      res.status(404).json(getErrResponse(null, "Item not found"));
+    } else {
+      res.status(200).json(getSuccessResponse(item));
     }
   } catch (error) {
     res
@@ -84,7 +105,6 @@ export const addNewRecommendation = async (
     } else {
       const schema = recommendationSchema;
       const { error, success, data } = schema.safeParse(req.body);
-      console.log(error, success, data);
 
       if (error || !success || !data) {
         res.status(400).json(getErrResponse(error, "Invalid data"));

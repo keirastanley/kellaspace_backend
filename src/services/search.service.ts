@@ -4,6 +4,8 @@ dotenv.config();
 
 const tmdb_api_key = process.env.TMDB_API_KEY;
 const listen_notes_api_key = process.env.LISTEN_NOTES_API_KEY!;
+const youtube_api_key = process.env.YOUTUBE_API_KEY;
+const books_api_key = process.env.BOOKS_API_KEY;
 
 const getTmdbSearchResults = async ({
   query,
@@ -72,3 +74,59 @@ export const getPodcastResults = async ({
   if (data.success === false) throw new Error(data.status_message);
   return data.results;
 };
+
+export const getVideoSearchResults = async ({
+  videoId,
+}: {
+  videoId: string;
+}) => {
+  const url = `https://www.googleapis.com/youtube/v3/videos?key=${youtube_api_key}&id=${videoId}&part=snippet,contentDetails`;
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+    },
+  };
+
+  const res = await fetch(url, options);
+  const data = await res.json();
+  if (!data) throw new Error(data.status_message);
+  return data.items[0];
+};
+
+//
+
+export const getBookSearchResults = async ({ query }: { query: string }) => {
+  const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
+    query
+  )}&key=${books_api_key}`;
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+    },
+  };
+
+  const res = await fetch(url, options);
+  const data = await res.json();
+  if (!data) throw new Error(data.status_message);
+  return data.items;
+};
+
+export const getMusicSearchResults = async ({
+  query,
+  mediaType,
+}: {
+  query: string;
+  mediaType: "album" | "track";
+}) =>
+  fetch(
+    `https://api.deezer.com/search?q=${mediaType}:"${encodeURIComponent(
+      query
+    )}"`
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      return (data.data as { rank: number }[]).sort((a, b) => b.rank - a.rank);
+    })
+    .catch((err) => console.error("Error fetching song:", err));
