@@ -26,7 +26,9 @@ const getTmdbSearchResults = async ({
 
   const res = await fetch(url, options);
   const data = await res.json();
-  if (data.success === false) throw new Error(data.status_message);
+  if (!data.success) {
+    throw new Error(data.status_message);
+  }
   return data.results;
 };
 
@@ -47,7 +49,9 @@ export const getMovieGenresArr = async () => {
 
   const res = await fetch(url, options);
   const data = await res.json();
-  if (data.success === false) throw new Error(data.status_message);
+  if (!data.success) {
+    throw new Error(data.status_message);
+  }
   return data.genres;
 };
 
@@ -71,7 +75,9 @@ export const getPodcastResults = async ({
 
   const res = await fetch(url, options);
   const data = await res.json();
-  if (data.success === false) throw new Error(data.status_message);
+  if (!data.success) {
+    throw new Error(data.status_message);
+  }
   return data.results;
 };
 
@@ -90,11 +96,12 @@ export const getVideoSearchResults = async ({
 
   const res = await fetch(url, options);
   const data = await res.json();
-  if (!data) throw new Error(data.status_message);
+
+  if (!data.items || data.items.length < 1) {
+    throw new Error("No videos with that id exist");
+  }
   return data.items[0];
 };
-
-//
 
 export const getBookSearchResults = async ({ query }: { query: string }) => {
   const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
@@ -119,14 +126,15 @@ export const getMusicSearchResults = async ({
 }: {
   query: string;
   mediaType: "album" | "track";
-}) =>
-  fetch(
-    `https://api.deezer.com/search?q=${mediaType}:"${encodeURIComponent(
-      query
-    )}"`
-  )
-    .then((res) => res.json())
-    .then((data) => {
-      return (data.data as { rank: number }[]).sort((a, b) => b.rank - a.rank);
-    })
-    .catch((err) => console.error("Error fetching song:", err));
+}) => {
+  const url = `https://api.deezer.com/search?q=${mediaType}:"${encodeURIComponent(
+    query
+  )}"`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    return (data.data as { rank: number }[]).sort((a, b) => b.rank - a.rank);
+  } catch (err) {
+    return err;
+  }
+};

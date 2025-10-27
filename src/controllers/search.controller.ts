@@ -5,15 +5,19 @@ import z from "zod";
 
 const parseQuery = (query: unknown) => z.string().safeParse(query);
 
-const handleInvalidQuery = (query: unknown, res: Response) => {
+const handleInvalidQuery = (
+  query: unknown,
+  res: Response,
+  message?: string
+) => {
   const { error, success, data } = parseQuery(query);
   if (error || !success || !data) {
     res
       .status(400)
       .json(
         getErrResponse(
-          new Error("query cannot be undefined"),
-          "query cannot be undefined"
+          new Error(message ?? "query cannot be undefined"),
+          message ?? "query cannot be undefined"
         )
       );
   } else {
@@ -70,12 +74,15 @@ export const searchForPodcast = async (req: Request, res: Response) => {
 };
 
 export const searchForVideo = async (req: Request, res: Response) => {
-  const videoId = handleInvalidQuery(req.query.video_id, res);
+  const videoId = handleInvalidQuery(
+    req.query.video_id,
+    res,
+    "video_id cannot be undefined"
+  );
 
   if (videoId) {
     try {
       const items = await searchService.getVideoSearchResults({ videoId });
-      console.log(items);
       res.status(200).json(getSuccessResponse(items));
     } catch (error) {
       res
