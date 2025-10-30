@@ -126,12 +126,3 @@ export const searchForMusic = async (req: Request, res: Response) => {
     }
   }
 };
-
-export const getGenres = async (req: Request, res: Response) => {
-  try {
-    const items = await searchService.getMovieGenresArr();
-    res.status(200).json(getSuccessResponse(items));
-  } catch (error) {
-    res.status(500).json(getErrResponse(error, `Error fetching genres`));
-  }
-};

@@ -1,6 +1,5 @@
 import { Router } from "express";
 import {
-  getGenres,
   searchForMovie,
   searchForTV,
   searchForPodcast,
@@ -22,7 +21,5 @@ searchRouter.get("/video", searchForVideo);
 searchRouter.get("/book", searchForBook);
 
 searchRouter.get("/music", searchForMusic);
-
-searchRouter.get("/genres", getGenres);
 
 export { searchRouter };

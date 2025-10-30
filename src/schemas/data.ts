@@ -12,21 +12,12 @@ export enum MediaType {
   Movie = "Movie",
   TVShow = "TV show",
   Music = "Music",
-  Game = "Game",
-  Article = "Article",
 }
 
-export const recommendationSchema = z.object({
-  id: z.string(),
+export const searchResultSchema = z.object({
   title: z.string(),
-  addedBy: z.string(),
   mediaType: z.nativeEnum(MediaType),
-  dateAdded: z.string(),
-  link: z.string().optional(),
   description: z.string().optional(),
-  completed: z.boolean(),
-  favourite: z.boolean(),
-  message: z.string().optional(),
   tags: z.array(z.string()).optional(),
   image: z
     .object({
@@ -34,7 +25,23 @@ export const recommendationSchema = z.object({
       alt: z.string(),
     })
     .optional(),
-  search_id: z.union([z.string(), z.null()]),
+  search_id: z.union([z.string(), z.number()]),
+  is_listen_notes: z.boolean().optional(),
+  is_tmdb: z.boolean().optional(),
+  is_youtube: z.boolean().optional(),
+  is_deezer: z.boolean().optional(),
+  is_google_books: z.boolean().optional(),
+});
+
+export const recommendationSchema = searchResultSchema.extend({
+  id: z.string(),
+  addedBy: z.string(),
+  dateAdded: z.string(),
+  link: z.string().optional(),
+  description: z.string().optional(),
+  completed: z.boolean(),
+  favourite: z.boolean(),
+  message: z.string().optional(),
 });
 
 export const listSchema = z.object({
@@ -55,17 +62,12 @@ export const listSchema = z.object({
 });
 
 export const userSchema = z.object({
-  // id: z.array(listSchema).optional(),
+  sub: z.string(),
+  display_name: z.string().optional(),
   recommendations: z.array(recommendationSchema).optional(),
   lists: z.array(listSchema).optional(),
-  given_name: z.string().optional(),
-  family_name: z.string().optional(),
-  nickname: z.string().optional(),
-  picture: z.string().optional(),
-  email_verified: z.string().optional(),
-  sub: z.string().optional(),
-  name: z.string().optional(),
 });
+
 export type UserData = z.infer<typeof userSchema>;
 export type ObjectId = ObjectIdMongoDb;
 export type WithId<T> = WithIdMongoDb<T>;
