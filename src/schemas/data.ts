@@ -27,10 +27,6 @@ export const searchResultSchema = z.object({
     .optional(),
   search_id: z.union([z.string(), z.number()]),
   is_listen_notes: z.boolean().optional(),
-  is_tmdb: z.boolean().optional(),
-  is_youtube: z.boolean().optional(),
-  is_deezer: z.boolean().optional(),
-  is_google_books: z.boolean().optional(),
 });
 
 export const recommendationSchema = searchResultSchema.extend({
@@ -58,7 +54,7 @@ export const listSchema = z.object({
       alt: z.string(),
     })
     .optional(),
-  contents: z.array(z.string()).optional(),
+  contents: z.array(recommendationSchema).optional(),
 });
 
 export const userSchema = z.object({

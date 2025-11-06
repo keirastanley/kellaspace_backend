@@ -253,31 +253,30 @@ export interface MusicSearchResult {
   type: "track";
 }
 
-export type UnknownSearchResult = (
+export type UnknownSearchResult =
   | MovieOrTvSearchResult
   | PodcastSearchResult
   | VideoSearchResult
   | BookSearchResult
-  | MusicSearchResult
-) & {
-  is_listen_notes?: boolean;
-  is_tmdb?: boolean;
-  is_youtube?: boolean;
-  is_deezer?: boolean;
-};
+  | MusicSearchResult;
 
 export const isMovieOrTvSearchResult = (
-  searchResult: UnknownSearchResult
-): searchResult is MovieOrTvSearchResult => !!searchResult.is_tmdb === true;
+  searchResult: UnknownSearchResult,
+  mediaType: MediaType
+): searchResult is MovieOrTvSearchResult =>
+  mediaType === MediaType.Movie || mediaType === MediaType.TVShow;
 
 export const isPodcastResult = (
-  searchResult: UnknownSearchResult
-): searchResult is PodcastSearchResult => !!searchResult.is_listen_notes;
+  searchResult: UnknownSearchResult,
+  mediaType: MediaType
+): searchResult is PodcastSearchResult => mediaType === MediaType.Podcast;
 
 export const isVideoResult = (
-  searchResult: UnknownSearchResult
-): searchResult is VideoSearchResult => !!searchResult.is_youtube;
+  searchResult: UnknownSearchResult,
+  mediaType: MediaType
+): searchResult is VideoSearchResult => mediaType === MediaType.Video;
 
 export const isMusicResult = (
-  searchResult: UnknownSearchResult
-): searchResult is MusicSearchResult => !!searchResult.is_deezer;
+  searchResult: UnknownSearchResult,
+  mediaType: MediaType
+): searchResult is MusicSearchResult => mediaType === MediaType.Music;

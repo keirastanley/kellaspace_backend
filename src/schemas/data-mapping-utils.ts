@@ -11,17 +11,20 @@ import {
 const formatTitle = (titleName: string, titleYear?: string) =>
   `${titleName} ${titleYear ? `(${titleYear.slice(0, 4)})` : ""}`;
 
-const getTitleName = (selectedResult: UnknownSearchResult) => {
-  if (isMovieOrTvSearchResult(selectedResult)) {
+const getTitleName = (
+  selectedResult: UnknownSearchResult,
+  mediaType: MediaType
+) => {
+  if (isMovieOrTvSearchResult(selectedResult, mediaType)) {
     return selectedResult.title ?? selectedResult.name ?? "";
   }
-  if (isPodcastResult(selectedResult)) {
+  if (isPodcastResult(selectedResult, mediaType)) {
     return selectedResult.title_original ?? "";
   }
-  if (isVideoResult(selectedResult)) {
+  if (isVideoResult(selectedResult, mediaType)) {
     return selectedResult.snippet.title;
   }
-  if (isMusicResult(selectedResult)) {
+  if (isMusicResult(selectedResult, mediaType)) {
     return selectedResult.title;
   }
   return (
@@ -32,11 +35,14 @@ const getTitleName = (selectedResult: UnknownSearchResult) => {
   );
 };
 
-const getTitleDate = (selectedResult: UnknownSearchResult) => {
-  if (isMovieOrTvSearchResult(selectedResult)) {
+const getTitleDate = (
+  selectedResult: UnknownSearchResult,
+  mediaType: MediaType
+) => {
+  if (isMovieOrTvSearchResult(selectedResult, mediaType)) {
     return (selectedResult.release_date || selectedResult.first_air_date) ?? "";
   }
-  if (isPodcastResult(selectedResult)) {
+  if (isPodcastResult(selectedResult, mediaType)) {
     return new Date(selectedResult.earliest_pub_date_ms).toISOString();
   }
   // if (isVideoResult(selectedResult)) {
@@ -48,23 +54,29 @@ const getTitleDate = (selectedResult: UnknownSearchResult) => {
   return "";
 };
 
-const getTitle = (selectedResult: UnknownSearchResult) => {
-  const titleName = getTitleName(selectedResult);
-  const titleYear = getTitleDate(selectedResult);
+const getTitle = (
+  selectedResult: UnknownSearchResult,
+  mediaType: MediaType
+) => {
+  const titleName = getTitleName(selectedResult, mediaType);
+  const titleYear = getTitleDate(selectedResult, mediaType);
   return formatTitle(titleName, titleYear);
 };
 
-const getImageSrc = (selectedResult: UnknownSearchResult) => {
-  if (isMovieOrTvSearchResult(selectedResult)) {
+const getImageSrc = (
+  selectedResult: UnknownSearchResult,
+  mediaType: MediaType
+) => {
+  if (isMovieOrTvSearchResult(selectedResult, mediaType)) {
     return `https://image.tmdb.org/t/p/w342${selectedResult.poster_path}`;
   }
-  if (isPodcastResult(selectedResult)) {
+  if (isPodcastResult(selectedResult, mediaType)) {
     return selectedResult.image;
   }
-  if (isVideoResult(selectedResult)) {
+  if (isVideoResult(selectedResult, mediaType)) {
     return selectedResult.snippet.thumbnails.high.url;
   }
-  if (isMusicResult(selectedResult)) {
+  if (isMusicResult(selectedResult, mediaType)) {
     return selectedResult.album.cover_big;
   }
   return selectedResult.volumeInfo.imageLinks
@@ -72,54 +84,44 @@ const getImageSrc = (selectedResult: UnknownSearchResult) => {
     : "";
 };
 
-const getImage = (selectedResult: UnknownSearchResult) => {
+const getImage = (
+  selectedResult: UnknownSearchResult,
+  mediaType: MediaType
+) => {
   return {
-    src: getImageSrc(selectedResult),
-    alt: getTitleName(selectedResult),
+    src: getImageSrc(selectedResult, mediaType),
+    alt: getTitleName(selectedResult, mediaType),
   };
 };
 
-const getDescription = (selectedResult: UnknownSearchResult) => {
-  if (isMovieOrTvSearchResult(selectedResult)) {
+const getDescription = (
+  selectedResult: UnknownSearchResult,
+  mediaType: MediaType
+) => {
+  if (isMovieOrTvSearchResult(selectedResult, mediaType)) {
     return selectedResult.overview;
   }
-  if (isPodcastResult(selectedResult)) {
+  if (isPodcastResult(selectedResult, mediaType)) {
     return selectedResult.description_original;
   }
-  if (isVideoResult(selectedResult)) {
+  if (isVideoResult(selectedResult, mediaType)) {
     return selectedResult.snippet.description;
   }
-  if (isMusicResult(selectedResult)) {
+  if (isMusicResult(selectedResult, mediaType)) {
     return "";
   }
   return selectedResult.volumeInfo.description;
 };
 
-const getDataSource = (mediaType: MediaType) => {
-  switch (mediaType) {
-    case MediaType.Book:
-      return { is_google_books: true };
-    case MediaType.Movie:
-    case MediaType.TVShow:
-      return { is_tmdb: true };
-    case MediaType.Music:
-      return { is_deezer: true };
-    case MediaType.Podcast:
-      return { is_listen_notes: true };
-    case MediaType.Video:
-    default:
-      return { is_youtube: true };
-  }
-};
-
 export const mapDataToSearchResult = (
   data: UnknownSearchResult,
   mediaType: MediaType
-): SearchResult => ({
-  title: getTitle(data),
-  mediaType,
-  description: getDescription(data),
-  image: getImage(data),
-  search_id: data.id,
-  ...getDataSource(mediaType),
-});
+): SearchResult => {
+  return {
+    title: getTitle(data, mediaType),
+    mediaType,
+    description: getDescription(data, mediaType),
+    image: getImage(data, mediaType),
+    search_id: data.id,
+  };
+};

@@ -36,7 +36,7 @@ const getTmdbSearchResults = async ({
 
   const res = await fetch(url, options);
   const data = await res.json();
-  if (!data.success) {
+  if (!data) {
     throw new Error(data.status_message);
   }
   const results = data.results as MovieOrTvSearchResult[];
@@ -48,7 +48,12 @@ const getTmdbSearchResults = async ({
     );
     if (result.genre_ids && result.genre_ids.length > 0) {
       const genresArr = await getMovieGenresArr();
-      searchResults.push({ ...searchResult, tags: genresArr });
+      searchResults.push({
+        ...searchResult,
+        tags: genresArr
+          .filter(({ id }) => result.genre_ids.includes(id))
+          .map(({ name }) => name),
+      });
     } else {
       searchResults.push(searchResult);
     }
@@ -73,10 +78,10 @@ export const getMovieGenresArr = async () => {
 
   const res = await fetch(url, options);
   const data = await res.json();
-  if (!data.success) {
+  if (!data) {
     throw new Error(data.status_message);
   }
-  return data.genres as string[];
+  return data.genres as { id: number; name: string }[];
 };
 
 export const getPodcastResults = async ({
